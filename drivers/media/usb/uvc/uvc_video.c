@@ -226,6 +226,14 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
 
 		ctrl->dwMaxPayloadTransferSize = bandwidth;
 	}
+	
+	/*
+	 * Allows 2 video devices to share a usb controller by reducing bandwidth
+	 * if the video stream is compressed.
+	 */
+	if (format->flags & UVC_FMT_FLAG_COMPRESSED) {
+            ctrl->dwMaxPayloadTransferSize = 0x400;
+    	}
 }
 
 static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
